@@ -67,40 +67,6 @@ set firewall.@zone[1].network='tethering wan'
 commit firewall
 EOF
 
-# wireless
-if [ -d /sys/class/ieee80211 ] && [ -n "$(ls /sys/class/ieee80211 2>/dev/null)" ]; then
-    echo "Wireless detected - configuring..."
-    uci set wireless.@wifi-device[0].disabled='0'
-    uci set wireless.@wifi-iface[0].disabled='0'
-    uci set wireless.@wifi-iface[0].mode='ap'
-    uci set wireless.@wifi-iface[0].encryption='psk2'
-    uci set wireless.@wifi-iface[0].key='XIDZs2026'
-    uci set wireless.@wifi-device[0].country='ID'
-    if grep -q "Raspberry Pi 5\|Raspberry Pi 4\|Raspberry Pi 3" /proc/cpuinfo; then
-        uci set wireless.@wifi-iface[0].ssid='XIDZs_5G'
-        uci set wireless.@wifi-device[0].channel='149'
-        uci set wireless.@wifi-device[0].htmode='VHT80'
-    else
-        uci set wireless.@wifi-iface[0].ssid='XIDZs'
-        uci set wireless.@wifi-device[0].channel='1'
-        uci set wireless.@wifi-device[0].htmode='HT20'
-    fi 
-    uci commit wireless
-    
-    if iw dev | grep -q Interface; then
-        if grep -q "Raspberry Pi 5\|Raspberry Pi 4\|Raspberry Pi 3" /proc/cpuinfo; then
-            if ! grep -q "wifi up" /etc/rc.local; then
-                sed -i '/exit 0/i sleep 10 && wifi up' /etc/rc.local
-            fi
-            if ! grep -q "wifi up" /etc/crontabs/root; then
-                echo "0 */12 * * * wifi down && sleep 5 && wifi up" >> /etc/crontabs/root
-            fi
-        fi
-    fi
-else
-    echo "No wireless detected - skipping configuration..."
-fi
-
 # me909s and dw5821e
 echo "Removing USB modeswitch entries..."
 sed -i -e '/12d1:15c1/,+5d' -e '/413c:81d7/,+5d' /etc/usb-mode.json
