@@ -134,7 +134,6 @@ jobs:
               "Amlogic s912 Nexbox-A95X-A2",
               "Amlogic s922x GT-King-Pro",
               "Tanix-TX6",
-              "Firefly-Rk3328",
               "Rk3318-BOX",
               "Rk3399 King3399"
             ]
@@ -160,7 +159,8 @@ jobs:
               "OrangePi 5 Plus",
               "OrangePi 5B",
               "H96-Max-M2",
-              "NanoPi-M5"
+              "NanoPi-M5",
+              "Firefly-Rk3328"
             ]
           }
           EOJ
